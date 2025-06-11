@@ -1,0 +1,16 @@
+Copyright (c) 2025 DragonSecretaryBot - Todos los derechos reservados.
+
+Este software (DragonSecretaryBot) es propiedad intelectual de [Tu Nombre o Empresa].
+
+🔹 USO PERSONAL:
+Puedes utilizar este bot de forma gratuita en su versión limitada, únicamente para fines personales, educativos o de prueba.
+
+🔒 RESTRICCIONES:
+- No está permitido el uso comercial sin una licencia pagada.
+- No está permitido modificar, descompilar, redistribuir ni incorporar este software en otros sistemas sin autorización por escrito.
+- No se garantiza soporte técnico para la versión gratuita.
+
+💼 LICENCIA COMERCIAL:
+Para obtener una licencia comercial que habilite funciones adicionales, uso en producción o acceso a soporte, contáctanos en: [tu correo o sitio web].
+
+Este software está protegido por las leyes de propiedad intelectual. Todos los derechos reservados.
