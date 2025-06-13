@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import asyncio
@@ -10,56 +11,67 @@ from telegram.ext import (
     ContextTypes, filters
 )
 
-from openai import OpenAI
-
 # Google API imports
 import pickle
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
+import google.generativeai as genai
 
 load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-SCOPES = ['https://www.googleapis.com/auth/calendar']
-
-client = OpenAI(api_key=OPENAI_API_KEY)
+# SCOPES = ['https://www.googleapis.com/auth/calendar']
+# Scopes para acceder al calendario
+SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 
 user_notes = {}
 user_reminders = {}
+# Configura la API key de Gemini
+genai.configure(api_key=GEMINI_API_KEY)
+# Modelo Gemini Pro
+gemini_model = genai.GenerativeModel(model_name='gemini-1.5-flash')
 
-# --- Google Calendar Auth and Service creation ---
-
-def get_google_calendar_service(user_id):
-    """
-    Obtiene el servicio Google Calendar para un usuario, 
-    manejando la autorización OAuth 2.0 con almacenamiento local del token.
-    """
+def get_calendar_service():
     creds = None
-    token_path = f'token_{user_id}.pickle'
-
-    # Cargar token guardado
+    token_path = 'token.pickle'
     if os.path.exists(token_path):
         with open(token_path, 'rb') as token:
             creds = pickle.load(token)
 
-    # Si no hay credenciales válidas, pedir login
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
-
-        # Guardar token para próximas sesiones
         with open(token_path, 'wb') as token:
             pickle.dump(creds, token)
 
-    service = build('calendar', 'v3', credentials=creds)
-    return service
+    return build('calendar', 'v3', credentials=creds)
+
+def add_event_to_calendar(event: dict):
+    service = get_calendar_service()
+
+    # Construimos el evento en formato Google Calendar
+    event_body = {
+        'summary': event['title'],
+        'start': {
+            'dateTime': f"{event['date']}T{event['time']}:00",
+            'timeZone': 'America/Santo_Domingo',  # cambia tu zona horaria
+        },
+        'end': {
+            'dateTime': f"{event['date']}T{event['time']}:00",
+            'timeZone': 'America/Santo_Domingo',
+        },
+    }
+
+    event = service.events().insert(calendarId='primary', body=event_body).execute()
+    return event.get('htmlLink')
+
 
 # --- Funciones Bot ---
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -83,7 +95,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
   `/recordar 2025-06-12 15:00 Comprar leche`
 • Autoriza tu cuenta Google con /auth para que tus recordatorios se sincronicen.
 • Si tienes dudas, usa /help en cualquier momento para recordar los comandos.
-• Puedes chatear conmigo con mensajes normales para obtener respuestas inteligentes usando ChatGPT.
+• Puedes chatear conmigo con mensajes normales para obtener respuestas inteligentes usando GEMINI AI.
 
 ¡Estoy aquí para ayudarte a ser más productivo! 🚀
 """
@@ -156,7 +168,7 @@ async def recordar(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Intentar crear evento en Google Calendar si autorizado
     try:
-        service = get_google_calendar_service(user_id)
+        service = get_calendar_service()
         event = {
             'summary': recordatorio_texto,
             'start': {'dateTime': dt.isoformat(), 'timeZone': 'UTC'},
@@ -198,25 +210,68 @@ async def check_reminders(app):
                 else:
                     pendientes.append((dt, text))
             user_reminders[user_id] = pendientes
+
+
         await asyncio.sleep(60)  # chequea cada minuto
 
-# OpenAI ChatGPT
+# Gemini AI Chatbot
 
-async def chatgpt(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def extract_event_from_text_gemini(text: str) -> dict:
+    prompt = f"""
+Extrae un evento del siguiente mensaje y devuélvelo como JSON con el formato:
+{{
+    "title": "...",
+    "date": "YYYY-MM-DD",
+    "time": "HH:MM"
+}}
+
+Mensaje: "{text}"
+
+Si no se encuentra información suficiente, devuelve un JSON vacío.
+"""
+    try:
+        response = gemini_model.generate_content(prompt)
+        raw = response.text.strip()
+
+        # Busca el bloque de JSON en el texto
+        start = raw.find("{")
+        end = raw.rfind("}") + 1
+        json_data = raw[start:end]
+
+        event = json.loads(json_data)
+
+        # Validación mínima
+        if "title" in event and "date" in event and "time" in event:
+            return event
+        return {}
+    except Exception as e:
+        print(f"❌ Error extrayendo evento con Gemini: {e}")
+        return {}
+
+
+async def gemini_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_message = update.message.text
     try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "Eres un asistente amigable y servicial."},
-                {"role": "user", "content": user_message}
-            ]
-        )
-        reply = response.choices[0].message.content.strip()
-        await update.message.reply_text(reply)
+        # Pregunta a Gemini
+        response = gemini_model.generate_content(user_message)
+        reply_text = response.text.strip()
+        await update.message.reply_text(reply_text)
+
+        # Intentamos extraer un evento del mensaje
+        event = await extract_event_from_text_gemini(user_message)
+        if event:
+            await update.message.reply_text(
+                f"📅 Evento detectado:\n📝 {event['title']}\n📆 {event['date']}\n⏰ {event['time']}"
+            )
+
+            # Aquí podrías agregarlo automáticamente a tu calendario con otra función, ej:
+            # await add_event_to_calendar(event)
+            link = add_event_to_calendar(event)
+            await update.message.reply_text(f"✅ Evento añadido a tu calendario:\n🔗 {link}")
     except Exception as e:
-        await update.message.reply_text("❌ Ocurrió un error inesperado al conectar con OpenAI.")
-        print(e)
+        await update.message.reply_text("❌ Error al comunicarse con Gemini AI.")
+        print(f"Gemini Error: {e}")
+
 
 # Google Calendar Auth command
 
@@ -224,7 +279,7 @@ async def auth(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     Explica al usuario cómo autorizar su cuenta Google.
     """
-    user_id = update.message.from_user.id
+    # user_id = update.message.from_user.id
     await update.message.reply_text(
         "Para autorizar tu Google Calendar, se abrirá una ventana de autorización en tu navegador.\n"
         "Si estás usando un servidor sin navegador, tendrás que copiar y pegar el link en otro dispositivo.\n"
@@ -235,7 +290,7 @@ async def auth(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # En esta implementación, get_google_calendar_service abre la ventana y guarda token en disco,
     # por eso sólo llamamos a esa función una vez para que el usuario autorice.
     try:
-        service = get_google_calendar_service(user_id)
+        service = get_calendar_service()
         await update.message.reply_text("✅ Google Calendar autorizado con éxito.")
     except Exception as e:
         await update.message.reply_text("❌ Falló la autorización. Intenta de nuevo más tarde.")
@@ -244,9 +299,9 @@ async def auth(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Comando para listar próximos eventos Google Calendar
 
 async def eventos(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.message.from_user.id
+    # user_id = update.message.from_user.id
     try:
-        service = get_google_calendar_service(user_id)
+        service = get_calendar_service()
         now = datetime.utcnow().isoformat() + 'Z'  # 'Z' indica UTC
         events_result = service.events().list(
             calendarId='primary', timeMin=now,
@@ -291,8 +346,8 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler("auth", auth))
     app.add_handler(CommandHandler("eventos", eventos))
 
-    # ChatGPT para mensajes normales
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chatgpt))
+    # GEMINI AI para mensajes normales
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, gemini_chat))
 
     print("🤖 Bot iniciado... Esperando comandos")
 
