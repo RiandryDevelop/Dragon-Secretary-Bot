@@ -66,11 +66,41 @@ genai.configure(api_key=GEMINI_API_KEY)
 # Modelo Gemini Pro
 gemini_model = genai.GenerativeModel(model_name='gemini-1.5-flash')
 
+# def get_calendar_service(user_id):
+#     creds = None
+#     token_path = f"tokens/token_{user_id}.pickle"
+#     os.makedirs("tokens", exist_ok=True)
+
+#     if os.path.exists(token_path):
+#         with open(token_path, 'rb') as token:
+#             creds = pickle.load(token)
+
+#     if not creds or not creds.valid:
+#         if creds and creds.expired and creds.refresh_token:
+#             creds.refresh(Request())
+#         else:
+#             flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+#             creds = flow.run_local_server(port=0)
+#         with open(token_path, 'wb') as token:
+#             pickle.dump(creds, token)
+
+#     return build('calendar', 'v3', credentials=creds)
+
 def get_calendar_service(user_id):
     creds = None
     token_path = f"tokens/token_{user_id}.pickle"
     os.makedirs("tokens", exist_ok=True)
 
+    # ✅ Crear credentials.json desde variable de entorno si no existe
+    if not os.path.exists("credentials.json"):
+        credentials_str = os.getenv("GOOGLE_CREDENTIALS_JSON")
+        if credentials_str:
+            with open("credentials.json", "w") as f:
+                json.dump(json.loads(credentials_str), f)
+        else:
+            raise ValueError("❌ GOOGLE_CREDENTIALS_JSON no está configurado en Railway.")
+
+    # ✅ Continuar flujo normal
     if os.path.exists(token_path):
         with open(token_path, 'rb') as token:
             creds = pickle.load(token)
@@ -85,6 +115,7 @@ def get_calendar_service(user_id):
             pickle.dump(creds, token)
 
     return build('calendar', 'v3', credentials=creds)
+
 
 def add_event_to_calendar(event: dict, user_id: int):
     service = get_calendar_service(user_id)
