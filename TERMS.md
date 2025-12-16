@@ -1,25 +1,85 @@
-# Términos de Uso - DragonSecretaryBot
+# Términos de Uso – DragonSecretaryBot
 
 ## 1. Aceptación de los términos
-Al usar DragonSecretaryBot, aceptas los presentes términos. Si no estás de acuerdo, no uses este bot.
+
+Al acceder o utilizar **DragonSecretaryBot**, aceptas cumplir con los presentes Términos de Uso.
+Si no estás de acuerdo con alguno de ellos, debes abstenerte de utilizar el bot.
+
+---
 
 ## 2. Modalidades de uso
-- **Versión gratuita**: limitada en funcionalidades, para uso personal y de prueba.
-- **Versión comercial/premium**: incluye funciones avanzadas, uso empresarial o soporte, disponible mediante suscripción o compra de licencia.
 
-## 3. Uso prohibido
-Está prohibido:
-- Usar el bot con fines ilegales o no autorizados.
-- Modificar, copiar, redistribuir o revender el bot sin permiso.
-- Automatizar o abusar del sistema (por ejemplo, spam, scraping, etc.).
+### 🔹 Versión gratuita
 
-## 4. Política de privacidad
-DragonSecretaryBot no almacena datos personales sin consentimiento. Puedes revisar nuestra política de privacidad aquí: NO disponile momentaneamente
+* Uso personal, educativo o de prueba.
+* Funcionalidades limitadas.
+* Sin garantía de disponibilidad ni soporte técnico.
+
+### 💼 Versión comercial / premium
+
+* Uso empresarial o en entornos de producción.
+* Acceso a funciones avanzadas.
+* Soporte técnico según el plan contratado.
+* Requiere licencia válida o suscripción activa.
+
+---
+
+## 3. Usos prohibidos
+
+Queda estrictamente prohibido:
+
+* Utilizar el bot para actividades ilegales, fraudulentas o no autorizadas.
+* Copiar, modificar, descompilar, realizar ingeniería inversa, redistribuir o revender el software sin autorización expresa por escrito.
+* Automatizar abusivamente el servicio (spam, scraping, sobrecarga de servicios, etc.).
+* Integrar DragonSecretaryBot en otros sistemas o productos sin licencia comercial.
+
+---
+
+## 4. Privacidad y datos
+
+DragonSecretaryBot no almacena datos personales sensibles sin el consentimiento del usuario.
+
+El uso del bot puede implicar la interacción con servicios de terceros (por ejemplo, Telegram o Google Calendar), los cuales se rigen por sus propias políticas de privacidad.
+
+Puedes consultar nuestra política de privacidad en:
+👉 **No disponible**
+
+---
 
 ## 5. Limitación de responsabilidad
-El bot se entrega “tal cual”, sin garantías. No somos responsables por pérdidas derivadas del uso del mismo.
 
-## 6. Cambios
-Estos términos pueden cambiar sin previo aviso. Te recomendamos revisarlos regularmente.
+DragonSecretaryBot se proporciona **“tal cual”**, sin garantías explícitas ni implícitas.
 
-Contacto: riandrydevs@gmail.com
+El desarrollador no será responsable por:
+
+* Pérdida de datos
+* Interrupciones del servicio
+* Daños directos o indirectos derivados del uso o imposibilidad de uso del bot
+
+El uso del software es bajo tu propia responsabilidad.
+
+---
+
+## 6. Cambios en los términos
+
+Nos reservamos el derecho de modificar estos Términos de Uso en cualquier momento y sin previo aviso.
+
+El uso continuado del bot después de los cambios implica la aceptación de los nuevos términos.
+
+---
+
+## 7. Propiedad intelectual
+
+DragonSecretaryBot es propiedad intelectual de **Riandry Connor**.
+
+Este software está protegido por las leyes de propiedad intelectual y tratados internacionales.
+Todos los derechos no expresamente concedidos están reservados.
+
+---
+
+## 📩 Contacto
+
+Para licencias comerciales, soporte o consultas legales:
+📧 **riandrydevsoffers@gmail.com**
+
+© 2025 **DragonSecretaryBot** – Todos los derechos reservados.
