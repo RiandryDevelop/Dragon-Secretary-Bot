@@ -1,6 +1,6 @@
 Copyright (c) 2025 DragonSecretaryBot - Todos los derechos reservados.
 
-Este software (DragonSecretaryBot) es propiedad intelectual de [Tu Nombre o Empresa].
+Este software (DragonSecretaryBot) es propiedad intelectual de **Riandry Connor**.
 
 🔹 USO PERSONAL:
 Puedes utilizar este bot de forma gratuita en su versión limitada, únicamente para fines personales, educativos o de prueba.
