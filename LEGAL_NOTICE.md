@@ -1,11 +1,13 @@
 # Aviso Legal
 
-DragonSecretaryBot es un software desarrollado por Riandry Connor.
+**DragonSecretaryBot** es un software desarrollado y propiedad de **Riandry Connor**.
 
-Su uso está sujeto a una licencia. Cualquier uso no autorizado, redistribución, ingeniería inversa o comercialización sin licencia está prohibido.
+El uso de este software está sujeto a una licencia.
+Cualquier uso no autorizado, incluyendo —pero no limitado a— la copia, modificación, redistribución, ingeniería inversa, sublicenciamiento o comercialización sin una licencia válida, está estrictamente prohibido.
 
-Para obtener una licencia comercial, soporte o más información, visita: riandrybots.com o contáctanos en [tu correo].
+Para obtener una **licencia comercial**, acceso a **funcionalidades avanzadas**, **soporte técnico** o más información, contáctanos en **riandrydevsoffers@gmail.com**.
 
-Este producto no está afiliado con Telegram, Google ni OpenAI.
+DragonSecretaryBot es un producto independiente y **no está afiliado, patrocinado ni respaldado** por Telegram, Google, OpenAI ni por ninguna de sus subsidiarias.
 
-© 2025 DragonSecretaryBot. Todos los derechos reservados.
+© 2025 **DragonSecretaryBot**.
+Todos los derechos reservados.
