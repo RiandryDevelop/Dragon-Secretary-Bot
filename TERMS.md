@@ -14,7 +14,7 @@ Está prohibido:
 - Automatizar o abusar del sistema (por ejemplo, spam, scraping, etc.).
 
 ## 4. Política de privacidad
-DragonSecretaryBot no almacena datos personales sin consentimiento. Puedes revisar nuestra política de privacidad aquí: [enlace a política si la tienes]
+DragonSecretaryBot no almacena datos personales sin consentimiento. Puedes revisar nuestra política de privacidad aquí: NO disponile momentaneamente
 
 ## 5. Limitación de responsabilidad
 El bot se entrega “tal cual”, sin garantías. No somos responsables por pérdidas derivadas del uso del mismo.
@@ -22,4 +22,4 @@ El bot se entrega “tal cual”, sin garantías. No somos responsables por pér
 ## 6. Cambios
 Estos términos pueden cambiar sin previo aviso. Te recomendamos revisarlos regularmente.
 
-Contacto: [tu email o web]
+Contacto: riandrydevs@gmail.com
